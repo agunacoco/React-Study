@@ -1,0 +1,8 @@
+<state>
+    -props state 차이점
+        props는 외부적인 것
+        state는 내부적인 것
+
+    
+
+
