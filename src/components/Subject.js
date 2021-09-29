@@ -7,11 +7,18 @@ class Subject extends Component {
     // 리액트에서는 render 함수가 바로 그 역할을 하고 있다.
     render() { // render 함수
         return ( // 컴포넌트를 만들 때는 하나의 최상위 태그로 시작해야한다.(vue와 같다)
+            // onclick은 자바스크립트 문법이지만 react 문법으로 사용하면 onClick이다.
             <header>
-                <h1><a href="/">{this.props.title}</a></h1>
-                {this.props.subtitle}
+                <h2><a href="/" onClick={function (e) {
+                    // function의 첫번째 인자로 이벤트 객체가 전달.
+                    e.preventDefault();
+                    this.props.onChangePage();
+                }.bind(this)}>{this.props.title}</a></h2>
+                {this.props.sub}
             </header>
+
         );
+
     }
 }
 

@@ -21,6 +21,7 @@ class App extends Component {
     // state 값을 초기화
     this.state = {
       mode: 'read',
+      content_id: 0,
       subject: { title: 'Agunacoco', subtitle: "What an adorable life is it?" },
       welcome: { title: "Welcome", desc: "Hello, React" },
       contents: [
@@ -38,14 +39,31 @@ class App extends Component {
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
     } else if (this.state.mode === "read") {
-      _title = this.state.contents[1].title;
-      _desc = this.state.contents[1].desc;
+
+      for (var i = 0; i < this.state.contents.length; i++) {
+        if (this.state.content_id === this.state.contents[i].id) {
+          _title = this.state.contents[i].title;
+          _desc = this.state.contents[i].desc;
+          break;
+        }
+      }
     }
     // render 함수의 this는 App component를 가르킨다.
     console.log('render', this);
     return (
       <div className="App" >
-        <header>
+        <Subject
+          title={this.state.subject.title}
+          sub={this.state.subject.subtitle}
+          onChangePage={function () {
+            this.setState({
+              mode: "welcome"
+            });
+          }.bind(this)}
+        ></Subject>
+        {/* 
+        //Subject component
+        <header> 
           <h1><a href="/" onClick={function (e) {
             // function(e){}처럼 매개변수 e는 event다.
             console.log(e);
@@ -68,9 +86,15 @@ class App extends Component {
             });
           }.bind(this)}>{this.state.subject.title}</a></h1>
           {this.state.subject.subtitle}
-        </header>
-
-        <TOC data={this.state.contents}></TOC>
+        </header> 
+        */}
+        <TOC onChangePage={function (id) {
+          this.setState({
+            mode: 'read',
+            content_id: Number(id),
+          });
+        }.bind(this)}
+          data={this.state.contents}></TOC>
         <Content title={_title} sub={_desc}></Content>
       </div >
     );
