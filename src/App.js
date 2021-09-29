@@ -11,13 +11,19 @@ class App extends Component {
   constructor(props) {
     // 컴포넌트가 실행될 때 render함수보다 먼저 실행.
     // 컴포넌트를 초기화시켜주는 코드는 constructor안에 적어준다. 
+    // constructor 안에서는 밑에 코드처럼 state 값을 바꾸면 되지만
+    // component가 생성된 이후에 동적으로 state의 값을 바꿀려면 
+    // this.setState({ 
+    //   ... : ~
+    // });
+    // 위 처럼 setState 함수를 사용해 그 안에 state 값을 바꿔야 한다.
     super(props);
     // state 값을 초기화
     this.state = {
-      mode: 'welcome',
+      mode: 'read',
       subject: { title: 'Agunacoco', subtitle: "What an adorable life is it?" },
       welcome: { title: "Welcome", desc: "Hello, React" },
-      content: [
+      contents: [
         { id: 1, title: "HTML", desc: "HTML is HyperText..." },
         { id: 2, title: "CSS", desc: "CSS is HyperText..." },
         { id: 3, title: "JAVASCRIPT", desc: "JAVASCRIPT is HyperText..." },
@@ -26,13 +32,46 @@ class App extends Component {
   }
 
   render() {
+    console.log("App render");
+    var _title, _desc = null;
+    if (this.state.mode === "welcome") {
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+    } else if (this.state.mode === "read") {
+      _title = this.state.contents[1].title;
+      _desc = this.state.contents[1].desc;
+    }
+    // render 함수의 this는 App component를 가르킨다.
+    console.log('render', this);
     return (
       <div className="App" >
-        <Subject title={this.state.subject.title} subtitle={this.state.subject.subtitle}></Subject>
-        <Subject title="React" subtitle="World wide codding!"></Subject>
-        <TOC data={this.state.content}></TOC>
-        <Content title="JAVA" sub="Java is HyperText Markup Language."></Content>
-        <Content title="HTML" sub="Html is HyperText Markup Language."></Content>
+        <header>
+          <h1><a href="/" onClick={function (e) {
+            // function(e){}처럼 매개변수 e는 event다.
+            console.log(e);
+            // preventDefault()는 새로고침이 되지 않는다.
+            e.preventDefault();
+            // debugger는 브라우저가 실행을 멈춘다.
+            // sources에서 보기 쉽게 되어 있다. 
+            // debugger;
+
+            // 오류 발생
+            // component가 이미 생성된 이후에 동적으로 state의 값을 바꿀 때는 밑에 방법을 하면 안된다.  
+            // this.state.mode = "welcome";
+            // this는 App component를 뜻하는데 function안에서의 this는 undefined다.
+            // function 안에 this를 사용할 수 없다.  
+            // 해결법 : 함수가 끝난 중괄호 뒤에 .bind(this)를 해주면 컴포넌트(this)를 사용할 수 있게 된다.   
+
+            // this.state를 지정할 수 있는 유일한 공간은 바로 constructor이다.
+            this.setState({ // state를 변경할 때 여기서 입력.
+              mode: 'welcome'
+            });
+          }.bind(this)}>{this.state.subject.title}</a></h1>
+          {this.state.subject.subtitle}
+        </header>
+
+        <TOC data={this.state.contents}></TOC>
+        <Content title={_title} sub={_desc}></Content>
       </div >
     );
   }

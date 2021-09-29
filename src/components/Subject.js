@@ -8,7 +8,7 @@ class Subject extends Component {
     render() { // render 함수
         return ( // 컴포넌트를 만들 때는 하나의 최상위 태그로 시작해야한다.(vue와 같다)
             <header>
-                <a href="/">{this.props.title}</a>
+                <h1><a href="/">{this.props.title}</a></h1>
                 {this.props.subtitle}
             </header>
         );
