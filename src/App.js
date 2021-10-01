@@ -20,6 +20,7 @@ class App extends Component {
     // });
     // 위 처럼 setState 함수를 사용해 그 안에 state 값을 바꿔야 한다.
     super(props);
+    this.max_content_id = 3;
     // state 값을 초기화
     this.state = {
       mode: 'read',
@@ -52,7 +53,26 @@ class App extends Component {
       _article = <ReadContent title={_title} sub={_desc}></ReadContent>
     } else if (this.state.mode === "create") {
 
-      _article = <CreateContent></CreateContent>
+      _article = <CreateContent onSubmit={function (_title, _desc) {
+        this.max_content_id = this.max_content_id + 1;
+
+        // push와 concat의 차이
+        // 배열에 push를 이용해서 값을 추가하면 원본의 값이 바뀌지만
+        // concat을 이용해 값을 추가하면 원본의 값이 바뀌지 않고 새로운 복제본을 만들어서 그 본제본을 바꾼다.
+
+        // this.state.contents.push(
+        //   { id: this.max_content_id, title: _title, desc: _desc }
+        // )
+
+        // 왜 여기서는 setState를 쓰지 않고 this.state로 바로 접근을 하냐면
+        // 원본의 값을 바꾸는 것이 아닌 복제본을 생성해 값을 바꿀거
+        var _contents = this.state.contents.concat(
+          { id: this.max_content_id, title: _title, desc: _desc }
+        )
+        this.setState({ // 값을 수정할 때
+          contents: _contents,
+        })
+      }.bind(this)}></CreateContent>
     }
 
 

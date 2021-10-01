@@ -1,7 +1,25 @@
 import React, { Component } from 'react';
 
 class TOC extends Component {
+
+    // component의 render 함수가 실행될지 결정할 수 있도록 하는 함수가 shouldComponentUpdate()다.
+    // shouldComponentUpdate 함수는 false나 true을 리턴해야한다.
+    // 두개의 매개변수를 갖도록 되어있다.
+
+    shouldComponentUpdate(newProps, newState) {
+        console.log("===> TOC render should");
+        // newProps.data는 바뀐 값을 알 수 있고,  this.props.data는 현재 값을 알 수 있다.
+        // return 값이 true면 render가 되고 false면 render가 호출되지 않는다.
+        // 만약 app.js에서 <CreateContent>의 데이터를 concat이 아닌 push를 하면
+        // 원본의 데이터 값이 바뀌기 때문에 계속 false가 리턴된다.
+        if (this.props.data === newProps.data) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     render() {
+        console.log("TOC render")
         var lists = [];
         var data = this.props.data;
         var i = 0;
