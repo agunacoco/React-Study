@@ -3,6 +3,7 @@ import TOC from './components/TOC';
 import Subject from './components/Subject';
 import ReadContent from './components/ReadContent';
 import CreateContent from './components/CreateContent';
+import UpdateContent from './components/UpdateContent';
 import Control from './components/Control';
 import './App.css';
 
@@ -35,8 +36,7 @@ class App extends Component {
     }
   }
 
-  render() {
-    console.log("App render");
+  getContent() {
     var _title, _desc, _article = null;
     if (this.state.mode === "welcome") {
       _title = this.state.welcome.title;
@@ -66,15 +66,35 @@ class App extends Component {
 
         // 왜 여기서는 setState를 쓰지 않고 this.state로 바로 접근을 하냐면
         // 원본의 값을 바꾸는 것이 아닌 복제본을 생성해 값을 바꿀거
-        var _contents = this.state.contents.concat(
-          { id: this.max_content_id, title: _title, desc: _desc }
-        )
+        // var _contents = this.state.contents.concat(
+        //   { id: this.max_content_id, title: _title, desc: _desc }
+        // )
+
+        // 만약 push를 이용해서 배열에 값을 추가한다면
+        // Array.from()을 이용해 this.state.content를 복제한다.
+        // 복제한 newContents에 그냥 push로 원하는 값을 입력한다. 
+        var newContents = Array.from(this.state.contents);
+        newContents.push({ id: this.max_content_id, title: _title, desc: _desc });
         this.setState({ // 값을 수정할 때
-          contents: _contents,
+          contents: newContents,
         })
       }.bind(this)}></CreateContent>
-    }
+    } else if (this.state.mode === "update") {
 
+      _article = <UpdateContent onSubmit={function (_title, _desc) {
+        this.max_content_id = this.max_content_id + 1;
+
+        var newContents = Array.from(this.state.contents);
+        newContents.push({ id: this.max_content_id, title: _title, desc: _desc });
+        this.setState({ // 값을 수정할 때
+          contents: newContents,
+        })
+      }.bind(this)}></UpdateContent>
+    }
+    return _article;
+  }
+  render() {
+    console.log("App render");
 
     // render 함수의 this는 App component를 가르킨다.
     console.log('render', this);
@@ -130,7 +150,7 @@ class App extends Component {
             mode: _mode,
           })
         }.bind(this)}></Control>
-        {_article}
+        {this.getContent}
       </div >
     );
   }
