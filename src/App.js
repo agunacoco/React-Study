@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import TOC from './components/TOC';
 import Subject from './components/Subject';
-import Content from './components/Content';
+import ReadContent from './components/ReadContent';
+import CreateContent from './components/CreateContent';
+import Control from './components/Control';
 import './App.css';
 
 // 실제로 자바스크립트 언어는 아니다.
@@ -34,7 +36,7 @@ class App extends Component {
 
   render() {
     console.log("App render");
-    var _title, _desc = null;
+    var _title, _desc, _article = null;
     if (this.state.mode === "welcome") {
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
@@ -47,7 +49,13 @@ class App extends Component {
           break;
         }
       }
+      _article = <ReadContent title={_title} sub={_desc}></ReadContent>
+    } else if (this.state.mode === "create") {
+
+      _article = <CreateContent></CreateContent>
     }
+
+
     // render 함수의 this는 App component를 가르킨다.
     console.log('render', this);
     return (
@@ -95,7 +103,14 @@ class App extends Component {
           });
         }.bind(this)}
           data={this.state.contents}></TOC>
-        <Content title={_title} sub={_desc}></Content>
+
+        {/* onChangMode라는 이벤트를 Control에 정의. */}
+        <Control onChangeMode={function (_mode) {
+          this.setState({
+            mode: _mode,
+          })
+        }.bind(this)}></Control>
+        {_article}
       </div >
     );
   }
