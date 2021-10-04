@@ -56,7 +56,7 @@ class App extends Component {
       _article = <CreateContent onSubmit={function (_title, _desc) {
         this.max_content_id = this.max_content_id + 1;
 
-        // push와 concat의 차이
+        // push와 concat의 차이는
         // 배열에 push를 이용해서 값을 추가하면 원본의 값이 바뀌지만
         // concat을 이용해 값을 추가하면 원본의 값이 바뀌지 않고 새로운 복제본을 만들어서 그 본제본을 바꾼다.
 
